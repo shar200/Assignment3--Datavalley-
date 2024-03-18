@@ -1,0 +1,41 @@
+ 
+  /* 2.  Write a java program to implement synchronization, write clear java coding steps how to 
+         do synchronization with java thread objects  */
+
+class Counter {
+    private int count = 0;
+    public synchronized void increment() {
+        count++;
+    }
+    public synchronized int getCount() {
+        return count;
+    }
+}
+class Worker implements Runnable {
+    private Counter counter;
+
+    public Worker(Counter counter) {
+        this.counter = counter;
+    }
+    @Override
+    public void run() {
+        for (int i = 0; i < 600; i++) {
+            synchronized (counter) {
+                counter.increment();
+            }
+        }
+    }
+}
+public class SynchronizationExp {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+        Thread thread1 = new Thread(new Worker(counter));
+        Thread thread2 = new Thread(new Worker(counter));
+
+        thread1.start();
+        thread2.start();
+        thread1.join();
+        thread2.join();
+        System.out.println("Final count: " + counter.getCount());
+    }
+}
