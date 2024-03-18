@@ -1,0 +1,79 @@
+	  
+      /* 1.  Write a java program, how to implement serialization for a given object. Use required classes and process to complete the serialization. for example take Customer(id, name, contactNo and address) class, use should
+	   write the java code, how to serialize Customer object to JavaObject.txt file */
+	 
+import java.io.*;
+
+class Customer implements Serializable {
+    private int id;
+    private String name;
+    private String contactNo;
+    private String address;
+
+    // Constructor
+    public Customer(int id, String name, String contactNo, String address) {
+        this.id = id;
+        this.name = name;
+        this.contactNo = contactNo;
+        this.address = address;
+    }
+
+    // Getters
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getContactNo() {
+        return contactNo;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    // Method to serialize Customer object
+    public void serialize(String filename) {
+        try {
+            FileOutputStream fileOut = new FileOutputStream(filename);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(this); // Writing the object
+            out.close();
+            fileOut.close();
+            System.out.println("Serialized data is saved my file  " + filename);
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+    }
+
+    // Method to deserialize Customer object (optional, not used in this example)
+    public static Customer deserialize(String filename) {
+        Customer customer = null;
+        try {
+            FileInputStream fileIn = new FileInputStream(filename);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            customer = (Customer) in.readObject(); 
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        } catch (ClassNotFoundException c) {
+            System.out.println("Customer class not found");
+            c.printStackTrace();
+        }
+        return customer;
+    }
+}
+
+public class Serialization  {
+    public static void main(String[] args) {
+        // Creating a Customer object
+        Customer customer = new Customer(1, "abc", "1234567890", "xyz city");
+
+        // Serializing the Customer object
+        customer.serialize("JavaObject.txt");
+    }
+}
